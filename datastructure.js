@@ -12,32 +12,77 @@ async function connectionToRedis(){
         console.log("connect to redis successfully");
 
         
-        //List -> LPUSH, LRANGE,LPOP,RPOP
-        await client.del("notes");
+        // List -> LPUSH, LRANGE,LPOP,RPOP
+    
+    // sorted sets    //
+    //         await client.del("notes");
+    
+    // sorted sets// 
+        // await client.lPush("notes",["note 1","note 2","note 3"])
+    
+    // sorted sets    // const extractAll = await client.lRange("notes",0,-1);
+    
+    // sorted sets        // console.log(extractAll);
+    
+            // sorted sets
+        // // sets -> SADD , SMEMBERS, SISMEMBER,SREM
+        // // await client.sRem("user:name");
+        // await client.sAdd("user:name",["varun","Rahul","randomeNickName"]);
 
-        await client.lPush("notes",["note 1","note 2","note 3"])
-        const extractAll = await client.lRange("notes",0,-1);
-        console.log(extractAll);
+        // const extractSetName = await client.sMembers("user:name");
+
+        // console.log(extractSetName);
         
-        // sets -> SADD , SMEMBERS, SISMEMBER,SREM
-        // await client.sRem("user:name");
-        await client.sAdd("user:name",["varun","Rahul","randomeNickName"]);
+        // //check if varun is a meber of set or not return true if present and false if not present
 
-        const extractSetName = await client.sMembers("user:name");
+        // const isVarunIsOneOfUserNickName = await client.sIsMember("user:name","varun");
 
-        console.log(extractSetName);
+        // console.log(isVarunIsOneOfUserNickName);
         
-        //check if varun is a meber of set or not return true if present and false if not present
+        // const removeName = await client.sRem("user:name","Rahul");
+        // console.log(removeName);
+        // const getUpdatedUserName = await client.sMembers("user:name");
+        // console.log(getUpdatedUserName);
 
-        const isVarunIsOneOfUserNickName = await client.sIsMember("user:name","varun");
+        // sorted sets
+        // commands ->zAdd,zrange,zRem
 
-        console.log(isVarunIsOneOfUserNickName);
+        // await client.zAdd("cart",[
+        //     {
+        //         score : 100, value:"cart1"
+        //     },
+        //     {
+        //         score : 103, value:"cart2"
+        //     },
+        //     {
+        //         score : 10, value:"cart3"
+        //     },
+        // ]);
+
+        // const getSortedSet = await client.zRange("cart",0,-1);
+        // console.log(getSortedSet);
+        // const getCartWithSortedScore  = await client.zRangeWithScores("cart",0,-1);
+        // console.log(getCartWithSortedScore);
+
+        //HASHES -> HSET,HGET,HGETALL
+
+        await client.hSet("product",{
+            name : "Product 1",
+            description: "Prodcut 1 description",
+            rating: "5",
+        });
+
+        const getProductRatuing = await client.hGet("product","rating");
+        console.log(getProductRatuing);
         
-        const removeName = await client.sRem("user:name","Rahul");
-        console.log(removeName);
-        const getUpdatedUserName = await client.sMembers("user:name");
-        console.log(getUpdatedUserName);
-
+        const getProdcutDetail = await client.hGetAll("product");
+        console.log(getProdcutDetail);
+        
+        //del a single value
+        await client.hDel("product",'rating');
+        const updateValue = await client.hGetAll("product")
+        console.log(updateValue);
+               
 
     } catch (error) {
         console.log(error);
